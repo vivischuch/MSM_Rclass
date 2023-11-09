@@ -1,0 +1,304 @@
+---
+title: "Introduction to R - Hands on"
+author: "Viviane Schuch - vschuch@msm.edu - Johnson's Lab -  Morehouse School of Medicine"
+date: 'Compiled: `r Sys.Date()`'
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction to R – Hands On 
+
+**Supplementary Reading Material**  
+R for Applied Epidemiology and Public Health: https://epirhandbook.com/r-basics.html
+
+We strongly recommend the study of the tutorial below for better use of the course:
+**DataCamp - Free introduction to R**: https://www.datacamp.com/courses/free-introduction-to-r
+
+Tutorial available on-line: https://vivischuch.github.io/MSM_Rclass/Hands_on.html
+
+
+# Install R and RStudio 
+**What is R**: R is a free statistical computing and graphing software that can be downloaded and distributed free of charge under the GNU license.
+
+**What is RStudio**: The RStudio is a set of integrated tools designed to help you be more productive with R. Both run on Windows, Linux, and macOS. 
+
+Alternatively, you can use **RStudio Cloud**, which has functions and looks the same as the RStudio you can install on your computer. Below we list all installation options:
+
+## Windows Users 
+### To Install R 
+1. To download R for Windows, go to the R website www.r-project.org 
+2. Click on CRAN (Comprehensive R Archive Network) 
+3. Choose the mirror of your choice (CRAN mirrors)
+4. Click on Windows 95 or later 
+5. Click base and save the R for Windows file. Then just run the file. 
+
+### To Install RStudio 
+1. Go to https://www.rstudio.com/products/rstudio/download/preview/ 
+2. Under Desktop Version - Installers, click on Windows 7+ 
+3. Follow the installation steps. 
+
+##  Mac Users 
+### To Install R 
+1. Open an internet browser and go to www.r-project.org. 
+2. Click the "download R" link in the middle of the page under "Getting Started." 
+3. Select a CRAN location (a mirror site) and click the corresponding link. 
+4. Click on the "Download R for (Mac) OS X" link at the top of the page. 
+5. Click on the file containing the latest version of R under "Files." 
+6. Save the .pkg file, double-click it to open it, and follow the installation instructions. 
+7. Now that R is installed, you must download and install RStudio. 
+
+### To Install RStudio 
+1. Go to https://www.rstudio.com/products/rstudio/download/preview/ 
+2. Click on "Download RStudio Desktop." 
+3. Click on the version recommended for your system, or the latest Mac version, save the .dmg file on your computer, double-click it to open, and then drag and drop it to your applications folder. 
+
+
+## RStudio Cloud Users
+1. Start RStudio Cloud: https://rstudio.cloud/ 
+2. Click on: **Your Workspace** then click on the: **New Project** box. 
+3. Click on the “**Untitled Project**” text in the upper left and type a name (Data-Science) for your project.  
+
+
+
+# RStudio orientation
+
+### First, open Rstudio.
+As their icons can look very similar, be sure you are opening Rstudio and not R. For RStudio to work you must also have R installed on the computer. 
+Rstudio is a Graphical User Interface (GUI) for easier use of R. 
+
+### By default RStudio displays four rectangle panes.
+
+If your RStudio displays only one left pane it is because you have no scripts open yet. 
+
+**The Source Pane**: This pane, by default in the upper-left, is a space to edit, run, and save your scripts. Scripts contain the commands you want to run. This pane can also display datasets (data frames) for viewing. 
+
+**The R Console Pane**: The R Console, by default the left or lower-left pane in RStudio, is the home of the R “engine”. This is where the commands are actually run and non-graphic outputs and error/warning messages appear. You can directly enter and run commands in the R Console, but realize that these commands are not saved as they are when running commands from a script. 
+
+**The Environment Pane**: This pane, by default in the upper-right, is most often used to see brief summaries of objects in the R Environment in the current session. These objects could include imported, modified, or created datasets, parameters you have defined (e.g. a specific epi week for the analysis), or vectors or lists you have defined during analysis (e.g. names of regions). You can click on the arrow next to a data frame name to see its variables.  This pane also contains History where can see commands that you can previously. It also has a “Tutorial” tab where you can complete interactive R tutorials if you have the learnr package installed. It also has a “Connections” pane for external connections, and can have a “Git” pane if you choose to interface with Github. 
+
+**Plots, Viewer, Packages, and Help Pane**: The lower-right pane includes several important tabs. Typical plot graphics including maps will display in the Plot pane. Interactive or HTML outputs will display in the Viewer pane. The Help pane can display documentation and help files. The Files pane is a browser which can be used to open or delete files. The Packages pane allows you to see, install, update, delete, load/unload R packages, and see which version of the package you have. 
+
+# Key terms
+
+**Objects** - Everything you store in R - datasets, variables, a list, a total number, even outputs such as graphs - are objects which are assigned a name and can be referenced in later commands.  
+
+**Data Types** - R has a wide variety of data types including scalars, vectors (numerical, character, logical), matrices, data frames, and lists. 
+
+**Vector** – A collection of ordered homogeneous elements. We can think of matrices, arrays, lists and data frames as deviations from a vector. The deviations are related to the two characteristics: order and homogeneity. 
+
+**Matrix** - A vector with two-dimensional shape information. All columns in a matrix must have the same mode (numeric, character, etc.) and the same length. Also, matrices can have row and column names, which can be determined and/or assigned by rownames and colnames.  
+
+**Array** - Arrays are similar to matrices but can have more than two dimensions.  
+
+**List** - A vector with possible heterogeneous elements. The elements of a list can be numeric vectors, character vectors, matrices, arrays, and lists. You create a list by using the list() command. 
+
+**Data Frames** - A list with possible heterogeneous vector elements of the same length. The elements of a data frame in that different columns can have different modes (numeric, character, factor, etc.), but they must all be of the same length. 
+
+**Functions** - A function is a code operation that accept inputs and returns a transformed output.  
+
+**Packages** - An R package is a shareable bundle of functions.  
+
+**Scripts** - A script is the document file that hold your commands.
+
+
+# Let’s start to practice! 
+
+**Let's create two vectors, named “days” and “babies”.**
+```{r}
+# This is a comment
+days <- c(1, 5, 10, 15, 20, 24)
+# This line creates a vector named days containing six elements: 1, 5, 10, 15, 20, and 24.
+# The <- symbol is the assignment operator in R, used to assign the values on the right to the variable on the left.
+# The c() function is used for concatenation. It combines the given numbers into a single vector.
+babies <- c(1, 2, 3, 4, 7, 9) 
+```
+
+**Now, we will graphically examine the relationship between “days” and “babies”.**  
+```{r}
+class(days) # this function return object class
+class(babies)
+```
+
+**Scatterplots are appropriate for examining the relationship between two numeric variables.** 
+We can produce a scatterplot using the plot command.
+To access the Help menu, type help and the name of the command you would like help for, or simply throw a question mark (?) in front of the command name.
+```{r, eval=FALSE}
+help(plot)
+?plot
+```
+
+**The variable that is entered first will appear on the x-axis while the variable entered second will appear on the y-axis.**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies)
+```
+
+**We can add a title to this plot using the main argument, as well as label the x-axis or y-axis using the xlab or ylab arguments.**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Title", xlab="days", ylab="babies")
+```
+
+**I also like to rotate the values on the y-axis by setting the las argument equal to 1.** 
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Title", xlab="days", ylab="babies", las=1)
+```
+
+**We may also change the plotting character we’re using by the pch argument. Here we use plotting character 8.**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Title", xlab="days", ylab="babies", las=1, pch=8)
+```
+
+**We may also change the plotting color of the characters using the col argument. Here we plot there in red.**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Title", xlab="days", ylab="babies", las=1, pch=8, col=2)
+```
+
+**If desired, one can also add frame.plot=FALSE to remove top and right borders.**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Title", xlab="days", ylab="babies", las=1, pch=8, col=2, frame.plot = FALSE)
+```
+
+**If desired, one can also change the x or y limits using the xlim and/or ylim argument. Here let's set the x-axis to run from 0 up to 25 and y-axis to run from 0 up to 10.**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Title", xlab="days", ylab="babies", las=1, pch=8, col=2, frame.plot = FALSE, xlim=c(0,25), ylim=c(0,10)) 
+```
+
+**If you wish to set the axes limits to exact values, in addition to specifying xlim and ylim, you must also set the xaxs and yaxs arguments to"i".**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Title", xlab="days", ylab="babies", las=1, pch=8, col=2, frame.plot = FALSE, xlim=c(0,25), ylim=c(0,10), yaxs="i", xaxs="i") 
+```
+
+**Finally, to make things easier to read, you can indent your code. RStudio automatically indents each line after the first in an R script.**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, # plot a scatter chart of days and babies
+     main="Title", # add a title label
+     xlab="days",  # add x-axis labels
+     ylab="babies", # add y-axis labels
+     las=1, # rotate the values on the y-axis
+     pch=8, # change plotting character
+     col=2, # change plotting color
+     frame.plot = FALSE, # remove top and right borders
+     xlim=c(0,25), # change x-axis limits
+     ylim=c(0,10), # change y-axis limits
+     yaxs="i", # set the y-axis limits to exact values
+     xaxs="i") # set the x-axis limits to exact values
+
+```
+
+# Let`s analyze DNA and RNA with R
+
+Since we will analyze DNA and RNA with R, we can say that we’re working on Computational Biology. What is Computational Biology? Computational Biology is the science of using biological data to develop algorithms and functions along with various biological systems.
+ 
+I will assign a specific disease, for example, Preeclampsia, and we will use real data, numerical and biological, which will be more fun and interesting. In our first study, we will use microarray data, consisting of test samples and control samples. 
+
+
+**Let’s go to GEO:**
+https://www.ncbi.nlm.nih.gov/geo/
+
+GEO (Gene Expression Omnibus) is a public repository that archives and freely distributes microarray, next-generation sequencing, and other high-throughput functional genomics data submitted by the research community.
+
+Enter a Series accession number in the search box: GSE66273
+
+We will use **GEO2R** to compare two or more groups to identify differentially expressed genes across experimental conditions. GEO2R provides a simple interface that allows users to perform statistical analysis using the GEOquery and limma R packages from the Bioconductor project without command line expertise.
+
+**Bioconductor** is an open source software project based on the R programming language that provides tools for analyzing high-throughput genomic data. 
+
+The **GEOquery** R package parses GEO data into R data structures that can be used by other R packages. 
+
+The **Limma R package** (limma - Linear Models for Microarray Analysis) has emerged as one of the most widely used statistical tests for identifying differentially expressed genes. It involves the construction of a 'design matrix' based on your groups of interest and then fitting a linear model to your data based on this model. Then, statistical values can be obtained from the linear fit.
+
+**Click link: Analyze with GEO2R**
+
+Click Define groups and enter names for the groups of Samples you plan to compare, e.g., test and control. For 2 group comparisons, typically it is appropriate to define the test group first, then define the control group - that way, the log fold change direction will follow convention and be positive for genes upregulated in test samples compared to controls, and negative for downregulated genes.
+
+Assign Samples to each group. Highlight Sample rows then click the group name to assign those Samples to the group. Use the Sample metadata (title, source and condition) columns to help determine which Samples belong to which group.
+Click the Analyze button to perform the calculation with default settings.
+
+R script: This tab prints the R script used to perform the calculation. This information can be saved and used as a reference for how results were calculated.
+
+Results are presented in the browser as a table of the top genes ranked by P-value. Genes with the smallest P-value are the most significant. 
+
+Use the Download full table link to download the entire set of results. The downloaded file is tab-delimited.
+
+
+**GEO2R summary statistics.**
+
+**adj.P.Val**: P-value after adjustment for multiple testing. This column is generally recommended as the primary statistic by which to interpret results. Genes with the smallest P-values will be the most reliable.
+
+**P.Value**: Raw P-value
+
+**t**: Moderated t-statistic (only available when two groups of Samples are defined)
+
+**B**: B-statistic or log-odds that the gene is differentially expressed (only available when two groups of Samples are defined)
+
+**logFC**: Log2-fold change between two experimental conditions (only available when two groups of Samples are defined)
+
+**F**: Moderated F-statistic combines the t-statistics for all the pair-wise comparisons into an overall test of significance for that gene (only available when more than two groups of Samples are defined)
+
+```{r, warning=FALSE}
+# here you need to find the path to the local where your table is:
+deg_table <-read.table("/home/vivischuch/Downloads/GSE66273.top.table.tsv", header = TRUE, sep = "\t")
+
+str(deg_table) # display the internal structure of a data frame
+head(deg_table) # display the first rows
+
+deg_table$minuslog10P <- -log10(deg_table$P.Value) # calculate the -log10 of the P-value
+
+degs <- deg_table[deg_table$P.Value < 0.05,]  # get the DEGs based on statistical significance
+up <- degs[degs$logFC > 1,] # Based on their fold change, select up regulated genes
+down <- degs[degs$logFC < 1,] #and down regulated genes
+```
+
+```{r, fig.height=6, fig.width=6}
+plot(deg_table$logFC, deg_table$minuslog10P, main="Volcano Plot", xlab="log2FC", ylab="-log10P", las=1, pch=20)
+
+abline(h=1.3, col="blue") # add horizontal straight line at the cut-off
+abline(v=c(-1,1), col="blue") # add vertical straight lines
+
+# Add grey points to unperturbed genes
+with(subset(deg_table, minuslog10P < 1.3), points(logFC, minuslog10P, pch=20, col="gray")) 
+# Add green points to downregulated genes
+with(subset(deg_table, logFC < -1 & minuslog10P > 1.3), points(logFC, minuslog10P, pch=20, col="blue")) 
+# Add red points to upregulated genes
+with(subset(deg_table, logFC > 1 & minuslog10P > 1.3), points(logFC, minuslog10P, pch=20, col="red")) 
+```
+
+
+# In addition to GEO, we can also play with Expression Atlas.
+https://www.ebi.ac.uk/gxa/home
+
+The Expression Atlas is a database that provides information on gene expression patterns from RNA-Seq and Microarray studies. The Expression Atlas allows searches by gene, splice variant, protein attribute, disease, treatment or organism part (cell types/tissues). Individual genes or gene sets can be searched for. All datasets in Expression Atlas have its metadata manually curated and its data analysed through standardised analysis pipelines.
+
+**Play around with other studies related to your project!**
+
+
+# To Install Packages 
+Only the minimum settings for its essential operation are installed when R is installed (packages with the “base” installation). It may be necessary to install additional packages to perform more complicated tasks. 
+To install packages, we can use CRAN www.r-project.org or Bioconductor http://www.bioconductor.org/  which has tools aimed at bioinformatics. Installation takes place directly from RStudio using the following command, as illustrated below: 
+
+```{r, eval=FALSE}
+# Install CRAN packages
+install.packages("calibrate")
+install.packages("data.table")
+install.packages("RColorBrewer")
+install.packages("matrixStats")
+install.packages("stringr")
+install.packages("tidyverse")
+
+
+# Install Bioconductor packages
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("GEOquery") 
+BiocManager::install("limma")
+BiocManager::install("reactome.db")
+BiocManager::install("fgsea") 
+```
