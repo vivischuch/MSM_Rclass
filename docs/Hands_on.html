@@ -1793,6 +1793,28 @@ your commands.</p>
 </div>
 <div id="lets-start-to-practice" class="section level1">
 <h1>Let’s start to practice!</h1>
+</div>
+<div id="github" class="section level1">
+<h1>Github</h1>
+<p>What is Git? <a href="https://github.com/" class="uri">https://github.com/</a></p>
+<ul>
+<li>Version Control</li>
+<li>Backup</li>
+<li>Share</li>
+</ul>
+<p>Prior to using Git with RStudio you should install it using the
+appropriate method for your platform. Windows &amp; OS X: <a href="http://git-scm.com/downloads" class="uri">http://git-scm.com/downloads</a></p>
+<p>More instructions here: <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" class="uri">https://git-scm.com/book/en/v2/Getting-Started-Installing-Git</a></p>
+<p>The entire book: <a href="https://git-scm.com/book/en/v2/" class="uri">https://git-scm.com/book/en/v2/</a></p>
+</div>
+<div id="lets-start-to-practice-1" class="section level1">
+<h1>Let’s start to practice!</h1>
+<p>Open Rstudio.</p>
+<p><strong>Click in File &gt; New Project &gt; Version
+Control</strong></p>
+<p>Repository URL: <a href="https://github.com/vivischuch/MSM_Rclass.git" class="uri">https://github.com/vivischuch/MSM_Rclass.git</a></p>
+<p>Choose local folder &gt; Create Project Open R script:
+Hands_on_script.Rmd</p>
 <p><strong>Let’s create two vectors, named “days” and
 “babies”.</strong></p>
 <pre class="r"><code># This is a comment
@@ -1938,6 +1960,7 @@ for that gene (only available when more than two groups of Samples are
 defined)</p>
 <pre class="r"><code># here you need to find the path to the local where your table is:
 deg_table &lt;-read.table(&quot;/home/vivischuch/Downloads/GSE66273.top.table.tsv&quot;, header = TRUE, sep = &quot;\t&quot;)
+# deg_table &lt;- GSE66273.top.table.tsv
 
 str(deg_table) # display the internal structure of a data frame</code></pre>
 <pre><code>## &#39;data.frame&#39;:    26138 obs. of  8 variables:
