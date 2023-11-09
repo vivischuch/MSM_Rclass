@@ -111,6 +111,31 @@ If your RStudio displays only one left pane it is because you have no scripts op
 
 # Let’s start to practice! 
 
+# Github
+What is Git? https://github.com/
+
+- Version Control
+- Backup
+- Share
+
+Prior to using Git with RStudio you should install it using the appropriate method for your platform.
+Windows & OS X: http://git-scm.com/downloads
+
+More instructions here: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+
+The entire book: https://git-scm.com/book/en/v2/
+
+# Let’s start to practice! 
+
+Open Rstudio. 
+
+**Click in File > New Project > Version Control**
+
+Repository URL: https://github.com/vivischuch/MSM_Rclass.git
+
+Choose local folder > Create Project
+Open R script: Hands_on_script.Rmd
+
 **Let's create two vectors, named “days” and “babies”.**
 ```{r}
 # This is a comment
@@ -245,6 +270,7 @@ Use the Download full table link to download the entire set of results. The down
 ```{r, warning=FALSE}
 # here you need to find the path to the local where your table is:
 deg_table <-read.table("/home/vivischuch/Downloads/GSE66273.top.table.tsv", header = TRUE, sep = "\t")
+# deg_table <- GSE66273.top.table.tsv
 
 str(deg_table) # display the internal structure of a data frame
 head(deg_table) # display the first rows
