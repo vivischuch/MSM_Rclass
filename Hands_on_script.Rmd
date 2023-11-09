@@ -269,8 +269,8 @@ Use the Download full table link to download the entire set of results. The down
 
 ```{r, warning=FALSE}
 # here you need to find the path to the local where your table is:
-deg_table <-read.table("/home/vivischuch/Downloads/GSE66273.top.table.tsv", header = TRUE, sep = "\t")
-# deg_table <- GSE66273.top.table.tsv
+# deg_table <-read.table("/home/vivischuch/Downloads/GSE66273.top.table.tsv", header = TRUE, sep = "\t")
+deg_table <- GSE66273.top.table.tsv
 
 str(deg_table) # display the internal structure of a data frame
 head(deg_table) # display the first rows
