@@ -1,0 +1,220 @@
+---
+Plot of Days vs Babies: "Introduction to R - Hands-on 1"
+author: "Viviane Schuch - vschuch@msm.edu - Johnson's Lab -  Morehouse School of Medicine"
+date: 'Compiled: `r Sys.Date()`'
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction to R – Hands On 
+
+### Supplementary Reading Material 
+
+- **R for Applied Epidemiology and Public Health**: [https://epirhandbook.com/r-basics.html](https://epirhandbook.com/r-basics.html)
+  - *Recommended for a solid foundation in R basics.*
+
+- **DataCamp - Free introduction to R**: [https://www.datacamp.com/courses/free-introduction-to-r](https://www.datacamp.com/courses/free-introduction-to-r)
+  - *Interactive tutorial to jumpstart your learning in R.*
+
+- **Online Tutorial**: [https://vivischuch.github.io/MSM_Rclass/Hands_on.html](https://vivischuch.github.io/MSM_Rclass/Hands_on.html)
+
+### Introduction to Github
+What is Github? [https://github.com/](https://github.com/)
+- *Github is a platform for version control and collaboration. It allows you to track changes in your code projects and work collaboratively with others.*
+
+  - **Version Control**: Keep track of code changes.
+  
+  - **Backup**: Safely store your code remotely.
+  
+  - **Share**: Collaborate with others on projects.
+
+### Install Git: [http://git-scm.com/downloads](http://git-scm.com/downloads)
+
+# Let's Play a Little in R!
+## Open Rstudio 
+**Start a New Project with Version Control**
+
+1. Click `File > New Project > Version Control`.
+
+2. Enter Repository URL: [https://github.com/vivischuch/MSM_Rclass.git](https://github.com/vivischuch/MSM_Rclass.git)
+
+3. Choose an empty local folder and click `Create Project`.
+
+4. Open the R script `Hands_on_1_script.Rmd` from the file pane.
+
+## Creating and Plotting Vectors
+**Objective:** Learn how to create vectors and visualize data with plots in R.
+
+### Step 1: Create Vectors
+
+**Vectors 'days' and 'babies'**:
+
+The `<-` symbol assigns values on the right to a variable on the left. `c()` is used for concatenation, combining numbers into a vector.
+```{r}
+# Creating a vector named 'days'
+days <- c(1, 5, 10, 15, 20, 24) # Contains six elements: 1, 5, 10, 15, 20, and 24.
+# Creating a vector named 'babies'
+babies <- c(1, 2, 3, 4, 7, 9)   # Contains six elements: 1, 2, 3, 4, 7, and 9.
+```
+
+### Step 2: Graphical Examination
+
+**Class Function**: To check the type of our vectors, we use `class()`.
+```{r}
+class(days) # Returns the class (type) of the 'days' vector
+class(babies) # Returns the class of the 'babies' vector
+```
+
+**Creating Scatterplots**: Visualize the relationship between two numeric variables.
+
+The first variable (days) appears on the x-axis, and the second (babies) on the y-axis.
+```{r, fig.height=4, fig.width=6}
+# help(plot) # Access help for the plot function
+# ?plot      # Another way to access help
+plot(days, babies) # Basic scatterplot
+```
+
+
+**Enhancing the Scatterplot - Adding Titles and Labels:**
+
+The main argument adds a title. xlab and ylab label the x-axis and y-axis respectively.
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Plot of Days vs Babies", xlab="days", ylab="babies")
+```
+
+
+**Rotating Axis Labels and Changing Plotting Character:** 
+
+**las=1**: rotates y-axis values. **pch=8**: changes the plotting character.
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Plot of Days vs Babies", xlab="days", ylab="babies", las=1, pch=8)
+```
+
+
+**Changing Plotting Color and Removing Borders:**
+
+**col=2**: sets the color to red. **frame.plot = FALSE**: removes top and right borders.
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Plot of Days vs Babies", xlab="days", ylab="babies", las=1, pch=8, col=2, frame.plot = FALSE)
+```
+
+
+**Setting Axis Limits:**
+
+**xlim** and **ylim**: set the limits of the x-axis and y-axis.
+
+**yaxs="i"** and **xaxs="i"**: set the style of the y-axis and x-axis intervals.
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, main="Plot of Days vs Babies", xlab="days", ylab="babies", las=1, pch=8, col=2, frame.plot = FALSE, xlim=c(0,25), ylim=c(0,10), yaxs="i", xaxs="i") 
+```
+
+
+**Indenting Code for Readability:**
+```{r, fig.height=4, fig.width=6}
+plot(days, babies, # plot a scatter chart of days and babies
+     main="Plot of Days vs Babies", # add a Plot of Days vs Babies label
+     xlab="days",  # add x-axis labels
+     ylab="babies", # add y-axis labels
+     las=1, # rotate the values on the y-axis
+     pch=8, # change plotting character
+     col=2, # change plotting color
+     frame.plot = FALSE, # remove top and right borders
+     xlim=c(0,25), # change x-axis limits
+     ylim=c(0,10), # change y-axis limits
+     yaxs="i", # set the y-axis limits to exact values
+     xaxs="i") # set the x-axis limits to exact values
+```
+
+# Let's Analyze DNA and RNA with R
+
+**Computational Biology and R**
+
+Computational Biology is the science of using biological data to develop algorithms and understand biological systems. In this section, we will apply R to analyze DNA and RNA data, using a specific case study related to **Preeclampsia**.
+
+## Using GEO (Gene Expression Omnibus)
+GEO is a public database for high-throughput genomic data. It's crucial for storing and freely distributing microarray, next-generation sequencing, and other genomics data.
+
+- Access GEO here: [NCBI GEO](https://www.ncbi.nlm.nih.gov/geo/)
+- We will use the series accession number: **GSE66273**
+
+### Analyzing Data with GEO2R
+GEO2R is a tool that allows us to compare gene expression between two or more groups. It's user-friendly and integrates well with R packages.
+
+#### Steps to Follow:
+1. Go to [Analyze with GEO2R](https://www.ncbi.nlm.nih.gov/geo/geo2r/)
+
+2. We will use the series accession number: GSE66273
+
+3. Define groups (e.g., test and control) for comparison.
+
+3. Assign samples to each group based on metadata.
+
+4. Click the 'Analyze' button for results.
+
+**When analyzing gene expression, define the test group first, then the control group, so that positive log fold changes indicate upregulated genes and negative ones indicate downregulated genes.**
+
+
+### R Implementation:
+```{r, warning=FALSE}
+deg_table <- read.table("/home/vivischuch/GSE66273.top.table.tsv", header = TRUE, sep = "\t")
+
+str(deg_table)  # Structure of the data frame
+head(deg_table)  # First few rows
+
+# Calculating -log10 of the P-value
+deg_table$minuslog10P <- -log10(deg_table$P.Value) 
+
+# Identifying differentially expressed genes (DEGs)
+degs <- deg_table[deg_table$P.Value < 0.05,]  # Filtering significant DEGs
+up <- degs[degs$logFC > 1,]  # Up-regulated genes
+down <- degs[degs$logFC < 1,]  # Down-regulated genes
+```
+
+**Volcano Plot Visualization**
+```{r, fig.height=6, fig.width=6}
+plot(deg_table$logFC, deg_table$minuslog10P, main="Volcano Plot", xlab="log2FC", ylab="-log10P", las=1, pch=20)
+abline(h=1.3, col="blue")  # Horizontal line for cutoff
+abline(v=c(-1,1), col="blue")  # Vertical lines for fold change
+
+# Highlighting genes based on expression
+with(subset(deg_table, minuslog10P < 1.3), points(logFC, minuslog10P, pch=20, col="gray")) 
+with(subset(deg_table, logFC < -1 & minuslog10P > 1.3), points(logFC, minuslog10P, pch=20, col="blue")) 
+with(subset(deg_table, logFC > 1 & minuslog10P > 1.3), points(logFC, minuslog10P, pch=20, col="red")) 
+```
+
+**Play around with other studies related to your project!**
+
+# Exploring Expression Atlas
+[Expression Atlas](https://www.ebi.ac.uk/gxa/home) is a valuable resource for gene expression research. It offers comprehensive data on gene expression patterns derived from RNA-Seq and Microarray studies. The database facilitates searches by various parameters such as gene, splice variant, protein attribute, disease, treatment, or organism part. It allows for detailed analysis of individual genes or gene sets. Notably, all datasets in Expression Atlas are carefully curated and analyzed using standardized pipelines.
+
+# Installing Additional Packages 
+R comes with a basic set of packages installed ('base' installation). However, for more advanced or specialized tasks, additional packages may be required. These can be installed from CRAN or Bioconductor, which are repositories for R packages. CRAN offers a wide range of general-purpose packages, while Bioconductor provides tools specifically for bioinformatics. 
+
+Installing these packages can be done directly within RStudio:
+```{r, eval=FALSE}
+# Install CRAN packages
+install.packages("calibrate")
+install.packages("data.table")
+install.packages("RColorBrewer")
+install.packages("matrixStats")
+install.packages("stringr")
+install.packages("tidyverse")
+
+
+# Install Bioconductor packages
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("GEOquery") 
+BiocManager::install("limma")
+BiocManager::install("reactome.db")
+BiocManager::install("fgsea") 
+```
