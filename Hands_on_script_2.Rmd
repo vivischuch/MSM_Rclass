@@ -1,0 +1,254 @@
+---
+Plot of Days vs Babies: "Introduction to R - Hands-on 1"
+author: "Viviane Schuch - vschuch@msm.edu - Johnson's Lab -  Morehouse School of Medicine"
+date: 'Compiled: `r Sys.Date()`'
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  word_document: default
+  pdf_document: default
+---
+
+# ######################
+
+# Class 2
+
+
+# Define study, platform, and disease variables
+```{r, eval=FALSE}
+gse <- "GSE66273"  # Study identifier
+```
+
+# Load necessary libraries
+```{r}
+library(data.table)
+library(GEOquery)
+library(tidyverse)
+library(umap)
+library("maptools")  # For placing point labels without overlaps
+library(limma)
+library(mdp)
+```
+
+# Download and read GEO dataset into an ExpressionSet object
+```{r}
+eset <- GEOquery::getGEO(gse, GSEMatrix = TRUE)
+# View the names of objects in the ExpressionSet list
+names(eset)
+# Select the first ExpressionSet from the list
+eset_1 <- eset[[1]]
+```
+
+# Convert expression data from ExpressionSet to a data frame
+```{r}
+expr <- as.data.frame(Biobase::exprs(eset_1))
+# Display the first few rows of the expression data
+head(expr)
+```
+
+# Extract phenotype data from the ExpressionSet
+```{r}
+phenoData_GEO_1 <- pData(eset_1)
+```
+
+# Align the columns of the expression data with the phenotype data
+```{r}
+index <- match(colnames(expr), phenoData_GEO_1$geo_accession)
+```
+
+# Reorder phenotype data to match the order in the expression data
+```{r}
+phenoData_GEO_1 <- phenoData_GEO_1[c(index),]
+```
+
+# Check if the geo_accession in phenoData matches the column names in expr
+```{r}
+table(phenoData_GEO_1$geo_accession == colnames(expr))
+```
+
+# Determining group column
+```{r}
+# Create a new column 'group' in phenoData and initialize with NA
+phenoData_GEO_1$group <- NA
+# Duplicate the 'title' column for further modification
+phenoData_GEO_1$title2 <- phenoData_GEO_1$title
+# Extract the first three words from each title
+phenoData_GEO_1$title2 <- sub("^((\\S+\\s+){2}\\S+).*", "\\1", phenoData_GEO_1$title2)
+# Replace spaces in the extracted titles with underscores
+phenoData_GEO_1$title2 <- gsub(" ", "_", phenoData_GEO_1$title2)
+# Rename 'group' column to 'Class' and 'geo_accession' to 'Sample' for consistency
+colnames(phenoData_GEO_1)[colnames(phenoData_GEO_1) == "group"] <- "Class"
+colnames(phenoData_GEO_1)[colnames(phenoData_GEO_1) == "geo_accession"] <- "Sample"
+
+# Classify samples based on title and filter out samples with missing class
+phenoData_GEO_1 <- phenoData_GEO_1 %>% 
+  dplyr::mutate(Class = case_when(title2 %in% c("Preterm_preeclampsia_placenta")~"Patient",
+                           title2 %in% c("Preterm_control_placenta")~"Control")) %>% 
+  dplyr::filter(!is.na(Class))
+
+# Select specific columns and rearrange them
+phenoData_GEO_1 <- phenoData_GEO_1 %>% 
+  dplyr::select(Sample, Class, everything())
+```
+
+
+```{r}
+# Display first 30 rows of the expression data
+head(expr, 30)
+# Align columns of expression data with the sample annotation
+index <- match(phenoData_GEO_1$Sample, colnames(expr))
+expr <- expr[,c(index)]
+
+# Verify alignment of Sample names in phenoData with column names in expr
+table(phenoData_GEO_1$Sample == colnames(expr))
+
+# Convert 'Class' column in phenoData to a factor
+phenoData_GEO_1$Class <- factor(phenoData_GEO_1$Class)
+# # Define group names (not used directly in the code)
+groups <- make.names(c("Control","Patient"))
+
+```
+
+# Convert expression data to a matrix
+```{r}
+ex <- as.matrix(expr)
+```
+
+# Box-and-whisker plot setup
+```{r}
+# Order samples by their class for plotting
+ord <- order(phenoData_GEO_1$Class)
+# Set color palette for the plot
+palette(c("#1B9E77", "#7570B3", "#E7298A", "#E6AB02", "#D95F02",
+          "#66A61E", "#A6761D", "#B32424", "#B324B3", "#666666"))
+# Set plot margins
+par(mar=c(7,4,2,1))
+# Define title for the boxplot
+title <- paste0(gse, " ", disease, " boxplot")
+# Create the boxplot with specified parameters
+boxplot(ex[,ord], boxwex=0.6, notch=T, main=title, outline=FALSE, las=2, col=phenoData_GEO_1$Class[ord])
+legend("topleft", groups, fill=palette(), bty="n")
+```
+
+# Prepare data for UMAP plot
+```{r, warning=FALSE}
+# Perform UMAP dimensionality reduction
+ump <- umap(t(ex), n_neighbors = 10, random_state = 123)
+# Set plot parameters
+par(mar=c(3,3,2,6), xpd=TRUE)
+# Plot UMAP results
+plot(ump$layout, main=paste0(gse, " ", disease, " UMAP plot, nbrs=10"), xlab="", ylab="", col=phenoData_GEO_1$Class, pch=20, cex=2)
+# Add legend to the plot
+legend("bottomright", legend=levels(phenoData_GEO_1$Class), pch=20, col=1:nlevels(phenoData_GEO_1$Class), title="Group", pt.cex=2)
+# Place point labels using maptools
+pointLabel(ump$layout, labels = rownames(ump$layout), method="SANN", cex=0.6)
+```
+
+# Expression value distribution analysis
+```{r}
+# Set plot margins
+par(mar=c(4,4,2,1))
+# Define title for the density plot
+title <- paste0(gse, " ", disease, " value distribution")
+# Create density plot for expression
+plotDensities(ex, group=phenoData_GEO_1$Class, main=title, legend ="topright")
+```
+
+# espression table check:
+```{r}
+# Check for missing values in the 'expr' data frame and display a summary table of the results.
+table(is.na(expr))
+# Display the structure of the 'expr' data frame, showing its dimensions, column names, and data types.
+str(expr)
+```
+
+# Extract feature data from an ExpressionSet object 'eset_1' using the Biobase package and assign it to 'feature_data'.
+```{r}
+feature_data <- Biobase::fData(eset_1)
+# Display the structure of 'feature_data' to understand its format and contents.
+str(feature_data)
+```
+
+# Add a new column 'GeneSymbol' to 'expr' by copying the 'GENE_SYMBOL' column from 'feature_data'.
+```{r}
+expr$GeneSymbol <- feature_data$GENE_SYMBOL
+# Display the first few rows of the modified 'expr' data frame to check the new 'GeneSymbol' column.
+head(expr)
+# Count the number of rows (genes) in 'expr' before any data cleaning.
+nrow(expr)
+# Reorder columns in 'expr', making 'GeneSymbol' the first column, and assign the result to 'expr_gene'.
+expr_gene <- expr %>%
+  dplyr::select(GeneSymbol, everything())
+```
+
+# Remove rows from 'expr_gene' where 'GeneSymbol' is blank or NA, effectively cleaning the data.
+```{r}
+expr_gene <- expr_gene %>% 
+  filter(GeneSymbol != "") %>%  
+  filter(!is.na(GeneSymbol))
+# Count the number of rows in 'expr_gene' after removing probes with missing or blank 'GeneSymbol'.
+nrow(expr_gene)
+```
+# Calculate the mean expression for each gene across all samples and add it as a new column 'mean_exprs'.
+```{r}
+expr_gene_probe_mean <- expr_gene %>%
+  mutate(mean_exprs = apply(expr_gene[,2:ncol(expr_gene)], 1, mean))
+# Group the data by 'GeneSymbol', then select the top row per group based on 'mean_exprs' value.
+expr_gene_summarized_by_mean <- expr_gene_probe_mean %>% 
+  group_by(GeneSymbol) %>% 
+  top_n(1, mean_exprs)
+# Count the number of rows in 'expr_gene_summarized_by_mean' after summarization.
+nrow(expr_gene_summarized_by_mean)
+# Remove the 'mean_exprs' column from the data, as it's no longer needed after summarization.
+expr_gene_summarized_by_mean <- expr_gene_summarized_by_mean %>% 
+  dplyr::select(-mean_exprs)
+```
+
+# Convert 'GeneSymbol' into row names of 'expr_gene_summarized_by_mean'.
+```{r}
+expr2 <- data.frame(column_to_rownames(expr_gene_summarized_by_mean, var = "GeneSymbol"))
+# Check the names of the columns in 'expr2'.
+colnames(expr2)
+# Compare the sample names in 'phenoData_GEO_1' and column names of 'expr2' and display a summary table.
+table(phenoData_GEO_1$Sample == colnames(expr2))
+
+```
+
+# mdp
+```{r}
+# Assign the data in 'expr2' to 'expr_gene_summarized_in_MDP' for gene expression analysis
+expr_gene_summarized_in_MDP <- expr2
+
+# Load the phenotype data into 'sample_annot_in_MDP'
+sample_annot_in_MDP <- phenoData_GEO_1
+
+# Check if the sample order in expression data matches the sample annotation. Should be all TRUE.
+table(colnames(expr_gene_summarized_in_MDP) == sample_annot_in_MDP$Sample)
+
+# Perform MDP analysis using median as the measure, considering the top 25% most perturbed genes
+mdp_results <- mdp(data = expr_gene_summarized_in_MDP, pdata = sample_annot_in_MDP, control_lab = "Control", measure = "median", fraction_genes = 0.25)
+
+```
+
+# ++++++ plot number of samples using ggplot
+```{r}
+# Extracting just the necessary columns (assuming 'Class' is one of the first two columns)
+sample_annot <- sample_annot_in_MDP
+sample_annot <- sample_annot[,c(1, 2)]
+head(sample_annot)
+
+# Create a frequency table for the 'Class' column
+class_freq <- as.data.frame(table(sample_annot$Class))
+
+# Sort the frequency table
+class_freq <- class_freq[order(class_freq$Freq), ]
+
+ggplot(data = class_freq, aes(x = reorder(Var1, -Freq), y = Freq, fill = Var1)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Freq), vjust = -0.5, color = "black", size = 3.5) +
+  ggtitle(paste("Samples", gse, disease)) +
+  theme_minimal() +
+  coord_flip()
+```
+
